@@ -26,9 +26,9 @@
   border: 1px solid #cdcdcd;
   color: #474b4e;
   display: flex;
-  justify-content: space-evenly;
-  vertical-align: top;
+  flex-direction: column-reverse;
   justify-content: flex-end;
+  align-items: flex-end;
   margin: 0px;
   padding: 5px;
   font-weight: bold;
@@ -48,7 +48,7 @@
 }
 
 .modal {
-  /* display: none; */
+  display: none;
   position: fixed;
   z-index: 99999;
   width: 100vw;
@@ -61,11 +61,16 @@
 }
 
 .modalContent {
-  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  text-align: center;
+  background-color: #ebebeb;
   margin: auto;
   padding: 20px;
   border: 1px solid #888;
-  width: 80%;
+  width: 25em;
+  height: 25em;
 }
 
 .close {
@@ -84,6 +89,23 @@
 
 .calendarContainer > div:hover {
   background-color: #e3e3e3;
+  transition-delay: 50ms;
+  cursor: pointer;
+}
+
+.descripcion {
+  background-color: #24f0b6;
+  margin: auto;
+  padding: 3px;
+  border: 1px solid #117055;
+  border-radius: 10px;
+  box-shadow: -2px -2px 5px #32705f;
+  width: 4em;
+  height: 1em;
+}
+
+.descripcion:hover {
+  background-color: #21d9a5;
   transition-delay: 50ms;
   cursor: pointer;
 }
