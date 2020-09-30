@@ -70,7 +70,37 @@
   padding: 20px;
   border: 1px solid #888;
   width: 25em;
-  height: 25em;
+  height: 28em;
+}
+
+.modalForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  text-align: left;
+  margin-left: 60px;
+  margin-right: 60px;
+  font-weight: bold;
+  background-color: #ebebeb;
+}
+
+.modalDate {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  text-align: right;
+  margin-right: 60px;
+  background-color: #ebebeb;
+}
+
+.modalButton {
+  flex-direction: row;
+  background-color: #595959;
+  color: white;
+  width: 8em;
+  height: 2em;
+  margin-left: 85px;
+  border-radius: 15px;
 }
 
 .close {

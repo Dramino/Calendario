@@ -12,23 +12,23 @@
       <div class="modalContent">
         <div>
           <span class="close" onclick="closeModal()"> &times; </span>
+          <h2>Agregar Evento</h3>
         </div>
-        <h3>Agregar Evento</h3>
-        <p>Fecha</p>
-        <form>
+        <p class="modalForm modalDate">Fecha</p>
+        <form class="modalForm">
           <label>Título</label><br />
           <input type="text" /><br />
           <label>Descripción</label><br />
           <input type="text" /><br />
           <label>Participantes</label><br />
           <input type="text" /><br /><br />
-          <input type="submit" value="Guardar" />
+          <input type="submit" value="Guardar" class="modalForm modalButton" />
         </form>
       </div>
     </div>
     <div id="container">
       <div>
-        <h1>Junio 2020</h1>
+        <h1 id="fecha">Junio 2020</h1>
       </div>
       <div class="calendarContainerHeader">
         <div>Lunes</div>
@@ -63,7 +63,7 @@
         <div>17</div>
         <div>
           <div class="descripcion">Título</div>
-          18
+          <div>18</div>
         </div>
         <div>19</div>
         <div>20</div>
