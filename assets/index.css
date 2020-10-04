@@ -20,13 +20,11 @@
   text-align: center;
 }
 
-.calendarContainer > div,
-.dayClass {
+.calendarContainer > div {
   height: 5rem;
   width: 5rem;
   background-color: white;
   border: 1px solid #cdcdcd;
-  color: #474b4e;
   display: flex;
   flex-direction: column-reverse;
   justify-content: flex-end;
@@ -47,6 +45,14 @@
   margin: 0px;
   padding: 5px;
   font-weight: bold;
+}
+
+.dayClass {
+  color: #474b4e;
+}
+
+.lastMonth {
+  color: #bbbbbb;
 }
 
 .modal {

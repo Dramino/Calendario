@@ -98,6 +98,7 @@ let createDays = () => {
       let divDay = document.createElement("div");
       divDay.dataset.position = dayEl;
       div.appendChild(divDay);
+      divDay.className = "dayClass";
     });
   }
 };
@@ -128,18 +129,19 @@ const getDaysPosition = (date) => {
   if (firstDay < 0) {
     firstDay = 6;
   }
-
+  console.log(`first function: ${firstDay}`);
   for (let index = 0; index < daysMonth; index++) {
     let dynamicDay = new Date(year, month, index + 1);
     let day = dynamicDay.getDate();
     let weekday = dynamicDay.getDay();
 
-    let row = Math.floor(Math.abs(day + firstDay - 1) / 7);
+    let row = Math.floor((day + firstDay - 1) / 7);
     let column = weekday;
     let position = `${row},${column}`;
 
     let element = document.querySelectorAll(`[data-position='${position}']`);
     element[0].innerHTML = day;
+    element[0].className = "dayClass";
     addOnClicEvent(element[0], dynamicDay);
   }
 };
@@ -160,29 +162,25 @@ const closeModal = () => {
   modal.style.display = "none";
 };
 
-let createDivTag = (number) => {
-  let tag = document.createElement("div");
-  let text = document.createTextNode(number);
-  tag.appendChild(text);
-  return tag;
-};
-
 const changeMonth = () => {
   setAllMonthsNull();
   let inputMonth = document.getElementById("month").selectedIndex;
   let specificDate = new Date(2020, inputMonth, 1);
   setCalendarMonth(specificDate);
   getDaysPosition(specificDate);
+  getDyasLastMonthPosition(specificDate);
 };
 
-const setMonthSelect = () => {
+const setMonthSelectTag = () => {
   let selectTag = document.getElementById("month");
   for (let month = 0; month < 12; month++) {
-    const optionTag = document.createElement("option");
+    let optionTag = document.createElement("option");
     let textNode = document.createTextNode(monthName[month]);
     optionTag.appendChild(textNode);
     selectTag.appendChild(optionTag);
   }
+  let today = new Date();
+  selectTag.value = monthName[today.getMonth()];
 };
 
 const setAllMonthsNull = () => {
@@ -196,9 +194,44 @@ const setAllMonthsNull = () => {
   }
 };
 
+const getDyasLastMonthPosition = (currentDate) => {
+  let currentMonth = currentDate.getMonth();
+  let lastMonth = currentMonth - 1;
+  if (lastMonth < 0) {
+    lastMonth = 11;
+  }
+  let currentYear = currentDate.getFullYear();
+  let yearLastMonth = currentYear;
+  if (lastMonth === 11) {
+    yearLastMonth--;
+  }
+  let daysLastMonth = getDaysInMonth(lastMonth + 1, yearLastMonth);
+  let firstDayCurrentMonth =
+    new Date(currentYear, currentMonth, 1).getDay() - 1;
+  if (firstDayCurrentMonth < 0) {
+    firstDayCurrentMonth = 6;
+  }
+  console.log(`second function: ${firstDayCurrentMonth}`);
+  let column = 0;
+  for (
+    let day = daysLastMonth - firstDayCurrentMonth + 1;
+    day < daysLastMonth + 1;
+    day++
+  ) {
+    console.log(`day=${day}`);
+    column++;
+    let position = `0,${column}`;
+    console.log(`position=${position}`);
+    let element = document.querySelectorAll(`[data-position='${position}']`);
+    element[0].innerHTML = day;
+    element[0].className = "lastMonth";
+  }
+};
+
 createDays();
 let targetMonth = today.getMonth();
 let specificDate = new Date(2020, targetMonth, 1);
 setCalendarMonth(specificDate);
 getDaysPosition(specificDate);
-setMonthSelect();
+setMonthSelectTag();
+getDyasLastMonthPosition(today);
