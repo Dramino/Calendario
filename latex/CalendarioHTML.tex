@@ -1,0 +1,277 @@
+\documentclass[12pt]{article}
+
+\input{Formato.tex}
+
+
+\title{Calendario mediante HTML}
+\author{Isaac Rosales García }
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Introducción}
+En este trabajo se muestran los diagramas de flujos para ver el comportamiento de las funciones usadas para el uso del calendario
+
+\section{HTML}
+La base de HTML es la que se muestra a continuación
+
+%\resizebox{.5\textwidth}{!}{
+\begin{lstlisting}[style=htmlcssjs][frame=single]
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="assets/index.css" />
+
+    <title>Calendario</title>
+  </head>
+
+  <body>
+    <select id="month" onchange="changeMonth()"></select>
+    <div id="miModal" class="modal">
+      <div class="modalContent">
+        <div>
+          <span class="close" onclick="closeModal()"> &times; </span>
+          <h2>Agregar Evento</h3>
+        </div>
+        <p class="modalForm modalDate">Fecha</p>
+        <form id="calendarForm" class="modalForm">
+          <label>Titulo</label><br />
+          <input type="text" name="title" required /><br />
+          <label>Descripcion</label><br />
+          <input type="text" name="description" required/><br />
+          <label>Participantes</label><br />
+          <input type="text" name="people"/><br /><br />
+          <div>
+            <input type="submit" value="Guardar" class="modalForm modalButton" />
+          </div>
+        </form>
+      </div>
+    </div>
+    <div id="container">
+      <div>
+        <h1 id="monthDate">Junio 2020</h1>
+      </div>
+       <div class="calendarContainerHeader">
+        <div>Lunes</div>
+        <div>Martes</div>
+        <div>Miercoles</div>
+        <div>Jueves</div>
+        <div>Viernes</div>
+        <div>Sabado</div>
+        <div>Domingo</div>
+      </div>
+    </div>
+    <hr>
+    <div id="dynamicHTML">
+    </div>
+    <script type="application/javascript" src="assets/index.js"></script>
+  </body>
+</html>
+\end{lstlisting}
+%}
+
+\section{css}
+
+A continuación se muestran las clases
+
+\begin{lstlisting}[style=css][frame=single]
+#container,
+#dynamicHTML {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+}
+
+.calendarContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  text-align: center;
+}
+
+.calendarContainerHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  text-align: center;
+}
+
+.calendarContainer > div {
+  height: 5rem;
+  width: 5rem;
+  background-color: white;
+  border: 1px solid #cdcdcd;
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  align-items: flex-end;
+  margin: 0px;
+  padding: 5px;
+  font-weight: bold;
+}
+
+.calendarContainerHeader > div {
+  height: 1rem;
+  width: 5rem;
+  background-color: #d1d1d1;
+  border: 1px solid #bbbbbb;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin: 0px;
+  padding: 5px;
+  font-weight: bold;
+}
+
+.dayClass {
+  color: #474b4e;
+}
+
+.lastMonth {
+  color: #bbbbbb;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 99999;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3);
+  left: 0;
+  top: 0;
+  padding-top: 100px;
+  overflow: hidden;
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  text-align: center;
+  background-color: #ebebeb;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 25em;
+  height: 28em;
+}
+
+.modalForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  text-align: left;
+  margin-left: 60px;
+  margin-right: 60px;
+  font-weight: bold;
+  background-color: #ebebeb;
+}
+
+.modalDate {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  text-align: right;
+  margin-right: 60px;
+  background-color: #ebebeb;
+}
+
+.modalButton {
+  flex-direction: row;
+  background-color: #595959;
+  color: white;
+  width: 8em;
+  height: 2em;
+  margin-left: 85px;
+  border-radius: 15px;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  cursor: pointer;
+  color: #000;
+  text-decoration: none;
+}
+
+.calendarContainer > div:hover {
+  background-color: #e3e3e3;
+  transition-delay: 50ms;
+  cursor: pointer;
+}
+
+.descripcion {
+  background-color: #24f0b6;
+  margin: auto;
+  padding: 3px;
+  border: 1px solid #117055;
+  border-radius: 10px;
+  box-shadow: -2px -2px 5px #32705f;
+  width: 4em;
+  height: 1em;
+}
+
+.descripcion:hover {
+  background-color: #21d9a5;
+  transition-delay: 50ms;
+  cursor: pointer;
+}
+
+\end{lstlisting}
+\section{Creación de días}
+El objetivo de esta función consiste en crear un elemento div
+
+\begin{lstlisting}[style=htmlcssjs][frame=single]
+let createDays = () => {
+
+  let container = document.getElementById("container");
+
+  for (const weekEl in dayObjectBox) {
+    let div = document.createElement("div");
+    div.className = "calendarContainer";
+    container.appendChild(div);
+
+    dayObjectBox[weekEl].forEach((dayEl) => {
+      let divDay = document.createElement("div");
+      divDay.dataset.position = dayEl;
+      div.appendChild(divDay);
+      divDay.className = "dayClass";
+    });
+  }
+};
+\end{lstlisting}
+
+\resizebox{.5\textwidth}{!}{
+\begin{tikzpicture}[node distance = 2.5cm]
+    % Place nodes
+    \node [block] (init) {iniciar función};
+    \node [block, below of=init] (getElement) {Se obtiene el elemento HTML <<container>>};
+    \node [block, below of=getElement] (initFor) {Ciclo for para elemento de <<dayObjectBox>>};
+    \node [block, below of=initFor] (createDiv) {Crea un elemento div};
+		\node [block, left of=createDiv, node distance=4cm] (stepOn) {Pasa por ciclo de weekEl};
+		\node [cloud, below of=createDiv, node distance=2cm] (stop) {fin};
+    % Draw edges
+    \path [line] (init) -- (getElement);
+    \path [line] (getElement) -- (initFor);
+    \path [line] (initFor) -- (createDiv);
+		\path [line] (createDiv) -- (stepOn);
+    \path [line] (stepOn) |- node[yshift=0.2cm] {yes}(initFor);
+		\path [line] (createDiv) -- (stop);
+    %\path [line] (update) |- (identify);
+    %\path [line] (decide) -- node {no}(stop);
+    %\path [line,dashed] (expert) -- (init);
+    %\path [line,dashed] (system) -- (init);
+    %\path [line,dashed] (system) |- (evaluate);
+\end{tikzpicture}
+}
+\end{document}
