@@ -1,6 +1,7 @@
 let modal = document.getElementById("miModal");
 let daysContainer = document.getElementsByClassName("calendarContainer");
-let fecha = document.getElementById("fecha");
+let monthDate = document.getElementById("monthDate");
+let formulario = document.getElementById("calendarForm");
 let today = new Date();
 
 let dayObjectBox = {
@@ -60,6 +61,9 @@ let dayObjectBox = {
   ],
 };
 
+let selectedPosition;
+let selectedMonth;
+
 const monthName = [
   "Enero",
   "Febrero",
@@ -111,7 +115,8 @@ const addOnClicEvent = (object, date) => {
   let month = monthName[date.getMonth()];
   let year = date.getFullYear();
   let texto = `${day} de ${month} de ${year}`;
-  object.onclick = (e) => displayModal(texto);
+  let position = object.dataset.position;
+  object.onclick = (e) => displayModal(texto, position);
 };
 
 const deleteOnClicEvent = (object) => {
@@ -129,7 +134,6 @@ const getDaysPosition = (date) => {
   if (firstDay < 0) {
     firstDay = 6;
   }
-  console.log(`first function: ${firstDay}`);
   for (let index = 0; index < daysMonth; index++) {
     let dynamicDay = new Date(year, month, index + 1);
     let day = dynamicDay.getDate();
@@ -140,8 +144,14 @@ const getDaysPosition = (date) => {
     let position = `${row},${column}`;
 
     let element = document.querySelectorAll(`[data-position='${position}']`);
-    element[0].innerHTML = day;
     element[0].className = "dayClass";
+    let divTag = document.createElement("div");
+    let divTagTitle = document.createElement("div");
+    divTagTitle.className = "descripcion";
+    divTag.innerHTML = day;
+    // divTagTitle.innerHTML = "Title";
+    // element[0].appendChild(divTagTitle);
+    element[0].appendChild(divTag);
     addOnClicEvent(element[0], dynamicDay);
   }
 };
@@ -150,12 +160,14 @@ let setCalendarMonth = (date) => {
   const month = date.getMonth();
   const year = date.getFullYear();
   const text = `${monthName[month]} ${year}`;
-  fecha.innerHTML = text;
+  selectedMonth = month;
+  monthDate.innerHTML = text;
 };
 
-const displayModal = (day) => {
+const displayModal = (day, position) => {
   modal.style.display = "block";
   modal.getElementsByTagName("p")[0].innerHTML = day;
+  selectedPosition = position;
 };
 
 const closeModal = () => {
@@ -168,7 +180,7 @@ const changeMonth = () => {
   let specificDate = new Date(2020, inputMonth, 1);
   setCalendarMonth(specificDate);
   getDaysPosition(specificDate);
-  getDyasLastMonthPosition(specificDate);
+  getDaysLastMonthPosition(specificDate);
 };
 
 const setMonthSelectTag = () => {
@@ -194,7 +206,7 @@ const setAllMonthsNull = () => {
   }
 };
 
-const getDyasLastMonthPosition = (currentDate) => {
+const getDaysLastMonthPosition = (currentDate) => {
   let currentMonth = currentDate.getMonth();
   let lastMonth = currentMonth - 1;
   if (lastMonth < 0) {
@@ -211,22 +223,73 @@ const getDyasLastMonthPosition = (currentDate) => {
   if (firstDayCurrentMonth < 0) {
     firstDayCurrentMonth = 6;
   }
-  console.log(`second function: ${firstDayCurrentMonth}`);
+
   let column = 0;
   for (
     let day = daysLastMonth - firstDayCurrentMonth + 1;
     day < daysLastMonth + 1;
     day++
   ) {
-    console.log(`day=${day}`);
     column++;
     let position = `0,${column}`;
-    console.log(`position=${position}`);
+
     let element = document.querySelectorAll(`[data-position='${position}']`);
     element[0].innerHTML = day;
     element[0].className = "lastMonth";
   }
 };
+
+const addDescription = (div) => {
+  const divTag = document.createElement("div");
+  divTag.className = "descripcion";
+  divTag.innerHTML = "Evento";
+  console.log(div[0]);
+
+  div[0].insertBefore(divTag, div[0].childNodes[0]);
+};
+
+const submit = (e) => {
+  e.preventDefault();
+  const title = formulario.elements["title"].value;
+  const description = formulario.elements["description"].value;
+  const people = formulario.elements["people"].value;
+  let jsonData = JSON.stringify({
+    title: title,
+    description: description,
+    people: people,
+    position: selectedPosition,
+    month: selectedMonth,
+  });
+  localStorage.setItem("data", jsonData);
+  const jsonTitle = JSON.stringify({ title: title });
+  const textTitle = JSON.parse(jsonTitle);
+  let element = document.querySelectorAll(
+    `[data-position='${selectedPosition}']`
+  );
+  addDescription(element);
+  closeModal();
+};
+
+/*
+pseudocódigo
+
+1. obtener el dayposition
+2. obtener el mes
+3. crear un texto daypostion/mes
+4. guardarlo con localStorage
+5. transformarlo en json
+6. guardar en localStorage un json en formato de texto con los datos del formulario
+7. necesito un json y por lo tanto que se lea el json como texto
+*/
+
+/*
+pseudocódigo para crear un flujo de información
+
+1. llamar al elemento del localStorage 
+2. crea un elemento div
+3. colocar la información del localStorage en el elemento div
+
+*/
 
 createDays();
 let targetMonth = today.getMonth();
@@ -234,4 +297,6 @@ let specificDate = new Date(2020, targetMonth, 1);
 setCalendarMonth(specificDate);
 getDaysPosition(specificDate);
 setMonthSelectTag();
-getDyasLastMonthPosition(today);
+getDaysLastMonthPosition(today);
+
+formulario.addEventListener("submit", submit);

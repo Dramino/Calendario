@@ -7,7 +7,6 @@
   </head>
 
   <body>
-    <button id="button" onclick="displayModal()">Abrir modal</button>
     <select id="month" onchange="changeMonth()"></select>
     <div id="miModal" class="modal">
       <div class="modalContent">
@@ -16,13 +15,13 @@
           <h2>Agregar Evento</h3>
         </div>
         <p class="modalForm modalDate">Fecha</p>
-        <form class="modalForm">
+        <form id="calendarForm" class="modalForm">
           <label>Título</label><br />
-          <input type="text" /><br />
+          <input type="text" name="title" required /><br />
           <label>Descripción</label><br />
-          <input type="text" /><br />
+          <input type="text" name="description" required/><br />
           <label>Participantes</label><br />
-          <input type="text" /><br /><br />
+          <input type="text" name="people"/><br /><br />
           <div>
             <input type="submit" value="Guardar" class="modalForm modalButton" />
           </div>
@@ -31,7 +30,7 @@
     </div>
     <div id="container">
       <div>
-        <h1 id="fecha">Junio 2020</h1>
+        <h1 id="monthDate">Junio 2020</h1>
       </div>
        <div class="calendarContainerHeader">
         <div>Lunes</div>
