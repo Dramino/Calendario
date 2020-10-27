@@ -15,8 +15,10 @@
 En este trabajo se muestran los diagramas de flujos para ver el comportamiento de las funciones usadas para el uso del calendario
 
 \section{HTML}
-La base de HTML es la que se muestra a continuación
+La base de HTML para crear el calendario se hizo mediante elementos \textcolor{blue}{div}, el \textcolor{blue}{div} que general, el cual contiene todos los elementos del calendario  tiene como \textcolor{blue}{id=container}.
+A partir de ahí se generan un \textcolor{blue}{div} el cual contendra a su vez \textcolor{blue}{div} de los días de la semana. Para los demás elementos del mes se hizo mediante JavaScript por lo se menciona más adelante.
 
+Además de los \textcolor{blue}{div} mencionados, se agrego un modal con boton de cierre y un formulario en su interor el cual recibe tres \textcolor{blue}{imputs} y un \textcolor{blue}{submit}
 %\resizebox{.5\textwidth}{!}{
 \begin{lstlisting}[style=htmlcssjs][frame=single]
 <!DOCTYPE html>
@@ -74,8 +76,22 @@ La base de HTML es la que se muestra a continuación
 
 \section{css}
 
-A continuación se muestran las clases
+A continuación se muestran las clases.
 
+\subsection{\#container}
+
+dado que en el HTML solo existe un elemento container, se decidió crear su clase de manea particular, para acomodar sus elementos internos se hizo mediante \textcolor{blue}{display:flex} el cual permitirá tener un mejor control de sus elementos. Para que los elementos se muestre uno debajo de otro se hizo uso de \textcolor{blue}{flex-direction:column} y \textcolor{blue}{align-items:center}.
+Finalmente para que ocupe toda la pnatalla se asigno una altura todal de toda la vista \textcolor{blue}{height:100vh}
+
+\begin{lstlisting}[style=css][frame=single]
+  #container,
+  #dynamicHTML {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+  }
+\end{lstlisting}
 \begin{lstlisting}[style=css][frame=single]
 #container,
 #dynamicHTML {
